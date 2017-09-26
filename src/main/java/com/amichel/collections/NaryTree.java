@@ -497,6 +497,7 @@ public class NaryTree<T extends Node<T>> {
 		 *
 		 * @return A clone of the current node
 		 */
+		@Override
 		public abstract Node<T> clone();
 
 		// checks that a particular node is valid

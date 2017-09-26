@@ -81,7 +81,7 @@ public class Test {
 
 		X(String expression) throws BadLimitsException, AmbiguousContentModelException {
 			AbstractExpression e = new DirectNotationFE("");
-			this.s = (SyntaxTree) e;
+			this.s = e;
 
 			e.parse(expression);
 			e.dumpExpression();

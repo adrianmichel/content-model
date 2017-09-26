@@ -105,6 +105,7 @@ public class IntegerSet extends HashSet<Integer> {
 	 *
 	 * @return The string representation of the IntegerSet object
 	 */
+	@Override
 	public String toString() {
 		return "{" + StringUtils.join(this, ",") + "}";
 	}

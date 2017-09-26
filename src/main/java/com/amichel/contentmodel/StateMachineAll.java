@@ -96,6 +96,7 @@ class StateMachineAll implements AbstractStateMachine {
 			this.sm = sm;
 		}
 
+		@Override
 		public Iterable<String> getValidTransitions() {
 			return new ValidTransitionsIterator(_v);
 		}
@@ -158,6 +159,7 @@ class StateMachineAll implements AbstractStateMachine {
 
 		}
 
+		@Override
 		public boolean doTransition(String symbol) {
 			Validate.notNull(symbol, "The symbol cannot be null in StateMachineAll.State.doTransition()");
 
@@ -181,6 +183,7 @@ class StateMachineAll implements AbstractStateMachine {
 			}
 		}
 
+		@Override
 		public boolean isValidTransition(String symbol) {
 			Validate.notNull(symbol, "The symbol cannot be null in StateMachineAll.State.doTransition()");
 
@@ -196,6 +199,7 @@ class StateMachineAll implements AbstractStateMachine {
 			}
 		}
 
+		@Override
 		public boolean canTerminate() {
 			for (int n = 0; n < _v.size(); n++) {
 				YY yy = _v.elementAt(n);
@@ -221,14 +225,17 @@ class StateMachineAll implements AbstractStateMachine {
 	}
 
 	// returns a new state object set to the start state
+	@Override
 	public AbstractState getInitialState() {
 		return new State(this, d.size(), d.values());
 	}
 
+	@Override
 	public void dump() {
 		/** @todo implement the state machine all dump */
 	}
 
+	@Override
 	public void setFinalStates(Object o) {
 	}
 

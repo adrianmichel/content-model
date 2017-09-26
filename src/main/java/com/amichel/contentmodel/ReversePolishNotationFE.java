@@ -32,34 +32,42 @@ public class ReversePolishNotationFE extends AbstractExpression {
 		super(name);
 	}
 
+	@Override
 	public void star(String name) {
 		pushOperator(makeStarNode(name));
 	}
 
+	@Override
 	public void plus(String name) {
 		pushOperator(makePlusNode(name));
 	}
 
+	@Override
 	public void opt(String name) {
 		pushOperator(makeOptNode(name));
 	}
 
+	@Override
 	public void neutral(String name) {
 		pushOperator(makeNeutralNode(name));
 	}
 
+	@Override
 	public void or(String name) {
 		pushOperator(makeOrNode(name));
 	}
 
+	@Override
 	public void and(String name) {
 		pushOperator(makeAndNode(name));
 	}
 
+	@Override
 	public void all(String name) {
 		pushOperator(makeAllNode(name));
 	}
 
+	@Override
 	protected void realRange(String name, int min, int max) throws BadLimitsException {
 		pushOperator(makeRangeNode(name, min, max));
 	}
@@ -77,17 +85,20 @@ public class ReversePolishNotationFE extends AbstractExpression {
 			symbol(operand);
 	}
 
+	@Override
 	public void symbol(String operand) {
 		addNode(crtNode, makeSymbolNode(operand));
 	}
 
+	@Override
 	public void pop() {
 		binaryExpressionStack.pop();
 		if (!binaryExpressionStack.empty())
-			crtNode = (ModelNode) binaryExpressionStack.peek();
+			crtNode = binaryExpressionStack.peek();
 	}
 
 	//
+	@Override
 	public void push() {
 	}
 }

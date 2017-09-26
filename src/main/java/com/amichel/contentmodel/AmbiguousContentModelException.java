@@ -27,6 +27,7 @@ public class AmbiguousContentModelException extends Exception {
 		return name;
 	}
 
+	@Override
 	public String getMessage() {
 		return message;
 	}

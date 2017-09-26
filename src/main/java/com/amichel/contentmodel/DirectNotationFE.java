@@ -72,53 +72,65 @@ public class DirectNotationFE extends AbstractExpression {
 		crtTree.add(op);
 	}
 
+	@Override
 	public void star(String name) {
 		addUnaryOp(makeStarNode(name));
 	}
 
+	@Override
 	public void plus(String name) {
 		addUnaryOp(makePlusNode(name));
 	}
 
+	@Override
 	public void opt(String name) {
 		addUnaryOp(makeOptNode(name));
 	}
 
+	@Override
 	protected void realRange(String name, int min, int max) throws BadLimitsException {
 		addUnaryOp(makeRangeNode(name, min, max));
 	}
 
+	@Override
 	public void neutral(String name) {
 		addUnaryOp(makeNeutralNode(name));
 	}
 
+	@Override
 	public void and(String name) {
 		addNaryOp(makeAndNode(name));
 	}
 
+	@Override
 	public void or(String name) {
 		addNaryOp(makeOrNode(name));
 	}
 
+	@Override
 	public void all(String name) {
 		addNaryOp(makeAllNode(name));
 	}
 
+	@Override
 	public void symbol(String w) {
 		crtTree.addMakeCrt(makeSymbolNode(w));
 	}
 
+	@Override
 	public void pop() {
-		XTree tree = (XTree) stack.pop();
+		XTree tree = stack.pop();
 		tree.addSubtree(crtTree);
 		crtTree = tree;
 	}
 
+	@Override
 	public void push() {
 		stack.push(crtTree);
 		crtTree = new XTree();
 	}
 
+	@Override
 	public void parse(String str) throws BadLimitsException {
 		super.parse(str);
 		Node<ModelNode> root = crtTree.getRoot();

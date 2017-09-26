@@ -173,7 +173,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			str += "************ Alphabet ****************\n";
 			str += "size: " + (new Integer(size)).toString() + "\n";
 			for (int n = 0; n < size; n++) {
-				AbstractSymbolNode node = (AbstractSymbolNode) elementAt(n);
+				AbstractSymbolNode node = elementAt(n);
 				String str1 = null;
 				if (node != null)
 					str1 = node.getValue();
@@ -210,6 +210,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(name);
 		}
 
+		@Override
 		public String toString() {
 			return super.toString();
 		}
@@ -262,6 +263,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return internalpos.contains(pos);
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			// super.dump();
 			os.write((" Nullable: " + (new Boolean(nullable())).toString() + ", ").getBytes());
@@ -295,6 +297,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(name);
 		}
 
+		@Override
 		public String toString() {
 			return super.toString();
 		}
@@ -315,6 +318,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return node;
 		}
 
+		@Override
 		void calculateInternalPos() {
 			for (ModelNode node = (ModelNode) getFirstChild(); node != null; node = (ModelNode) node.getNextSibling())
 				internalpos().reunion(node.internalpos());
@@ -331,11 +335,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// an unary operator cannot have more than 1 child
+		@Override
 		boolean canHaveMoreChildren() {
 			return getChildrenCount() == 0;
 		}
 
 		// an unary operator is valid if it has exactly one child
+		@Override
 		public boolean check() {
 			return getChildrenCount() == 1;
 		}
@@ -348,6 +354,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			setLastPos(node.lastpos());
 		}
 
+		@Override
 		final void calculate() {
 			ModelNode node = (ModelNode) getFirstChild();
 
@@ -361,6 +368,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 
 	static private abstract class NaryOperatorNode extends OperatorNode {
 
+		@Override
 		final void calculate() {
 			ModelNode node1 = (ModelNode) getFirstChild();
 			ModelNode node2 = (ModelNode) getLastChild();
@@ -385,11 +393,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// an nary operator can have more children
+		@Override
 		boolean canHaveMoreChildren() {
 			return true;
 		}
 
 		// an nary operator is valid if it has at least 2 children
+		@Override
 		public boolean check() {
 			return getChildrenCount() >= 2;
 		}
@@ -418,6 +428,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return value;
 		}
 
+		@Override
 		public String toString() {
 			return "\"" + value + "\"";
 		}
@@ -429,12 +440,14 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// a symbol node cannot have any more children
+		@Override
 		boolean canHaveMoreChildren() {
 			return false;
 		}
 
 		// a symbol node is valid if it doesn't have any children (it is a leaf in the
 		// syntax tree)
+		@Override
 		public boolean check() {
 			return getChildrenCount() == 0;
 		}
@@ -481,14 +494,17 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(_value, _pos);
 		}
 
+		@Override
 		public String toString() {
 			return super.toString();
 		}
 
+		@Override
 		public ModelNode clone() {
 			return new SymbolNode(this);
 		}
 
+		@Override
 		protected IntegerSet followpos() {
 			return followpos;
 		}
@@ -497,12 +513,14 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return value.equals(_value);
 		}
 
+		@Override
 		void calculate() {
 			setFirstPos(new IntegerSet(getPosition()));
 			setLastPos(new IntegerSet(getPosition()));
 			setNullable(false);
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("\"" + value + "\" " + (new Integer(getPosition())).toString() + " ").getBytes());
 			os.write((" Followpos: ").getBytes());
@@ -510,6 +528,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super.dump(os);
 		}
 
+		@Override
 		void calculateInternalPos() {
 			internalpos().add(getPosition());
 		}
@@ -538,29 +557,35 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(node);
 		}
 
+		@Override
 		protected IntegerSet followpos() {
 			return null;
 		}
 
+		@Override
 		public ModelNode clone() {
 			return new EmptySymbolNode(this);
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("<E> " + (new Integer(getPosition())).toString()).getBytes());
 			super.dump(os);
 		}
 
+		@Override
 		public String toString() {
 			return "<E>";
 		}
 
+		@Override
 		void calculate() {
 			setNullable(true);
 			setFirstPos(new IntegerSet());
 			setLastPos(new IntegerSet());
 		}
 
+		@Override
 		void calculateInternalPos() {
 		}
 	}
@@ -580,11 +605,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(node);
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("*").getBytes());
 			super.dump(os);
 		}
 
+		@Override
 		public String toString() {
 			ModelNode node = (ModelNode) getFirstChild();
 			String string = new String(node.toString());
@@ -593,15 +620,18 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// public String toString() { return "*"; }
+		@Override
 		public OperatorStarNode clone() {
 			return new OperatorStarNode(this);
 		}
 
 		// this operator only has a child, so node1 == node2
+		@Override
 		protected void calculateNullable(ModelNode node) {
 			setNullable(true);
 		}
 
+		@Override
 		void calculateFollowpos() {
 			for (Integer n : lastpos()) {
 				AbstractSymbolNode node = alphabet.elementAt(n);
@@ -610,6 +640,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -630,11 +661,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(node);
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("+").getBytes());
 			super.dump(os);
 		}
 
+		@Override
 		public String toString() {
 			String string = new String();
 			ModelNode node = (ModelNode) getFirstChild();
@@ -644,15 +677,18 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// public String toString() { return "+"; }
+		@Override
 		public ModelNode clone() {
 			return new OperatorPlusNode(this);
 		}
 
 		// this operator only has a child, so node1 == node2
+		@Override
 		protected void calculateNullable(ModelNode node) {
 			setNullable(node.nullable());
 		}
 
+		@Override
 		void calculateFollowpos() {
 			for (Integer n : lastpos()) {
 				AbstractSymbolNode node = alphabet.elementAt(n);
@@ -661,6 +697,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -698,21 +735,25 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			statesPairToRange = _statesPairToRange;
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("Range " + limits.toString()).getBytes());
 			super.dump(os);
 		}
 
+		@Override
 		public String toString() {
 			ModelNode node = (ModelNode) getFirstChild();
 			String string = new String(node.toString());
 			return string + limits.toString();
 		}
 
+		@Override
 		public ModelNode clone() {
 			return new OperatorRangeNode(this);
 		}
 
+		@Override
 		protected void calculateFirstPos(ModelNode child) {
 			super.calculateFirstPos(child);
 			// adds the current range to the map startrange state/range operator object
@@ -722,6 +763,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		protected void calculateLastPos(ModelNode child) {
 			super.calculateLastPos(child);
 			for (Integer n : lastpos()) {
@@ -730,11 +772,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		protected void calculateNullable(ModelNode node) {
 			setNullable(limits.min() == 0 ? true : node.nullable());
 		}
 
 		// nullable: if min == 0, treat this as a "*", otherwise, treat as a "+"
+		@Override
 		void calculateFollowpos() {
 			for (Integer n : lastpos()) {
 				SymbolNode node = (SymbolNode) alphabet.elementAt(n);
@@ -743,6 +787,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 
 		}
 
+		@Override
 		void postCalculate() throws AmbiguousContentModelException {
 			// adding the range to the map associating transitions to ranges
 			// it is OK to do it now (even if we should probably use a separate function
@@ -761,6 +806,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super.postCalculate();
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -778,6 +824,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(node);
 		}
 
+		@Override
 		public String toString() {
 			ModelNode node = (ModelNode) getFirstChild();
 			String string = new String(node.toString());
@@ -785,21 +832,25 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return string;
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("?").getBytes());
 			super.dump(os);
 		}
 
 		// public String toString() { return "?"; }
+		@Override
 		public ModelNode clone() {
 			return new OperatorQMarkNode(this);
 		}
 
 		// this operator only has a child, so node1 == node2
+		@Override
 		protected void calculateNullable(ModelNode node) {
 			setNullable(true);
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -814,26 +865,31 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(node);
 		}
 
+		@Override
 		public String toString() {
 			ModelNode node = (ModelNode) getFirstChild();
 			return new String(node.toString());
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("").getBytes());
 			super.dump(os);
 		}
 
 		// public String toString() { return ""; }
+		@Override
 		public ModelNode clone() {
 			return new OperatorNeutralNode(this);
 		}
 
 		// this operator only has a child, so node1 == node2
+		@Override
 		protected void calculateNullable(ModelNode node) {
 			setNullable(node.nullable());
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -858,6 +914,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			cloned = true;
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("AND").getBytes());
 			super.dump(os);
@@ -867,6 +924,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return alphabet;
 		}
 
+		@Override
 		public String toString() {
 			String string = new String();
 			if (!cloned)
@@ -885,18 +943,20 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// public String toString() { return "AND"; }
+		@Override
 		public ModelNode clone() {
 			return new OperatorAndNode(this);
 		}
 
+		@Override
 		protected void calculateFirstPos(ModelNode node1, ModelNode node2) {
 			if (binary) {
 				if (node1.nullable())
-					setFirstPos(((IntegerSet) node1.firstpos().clone()).reunion((IntegerSet) node2.firstpos()));
+					setFirstPos(((IntegerSet) node1.firstpos().clone()).reunion(node2.firstpos()));
 				else
 					// do not clone, since it is the same
 					// TODO: check that this assumption is correct at runtime
-					setFirstPos((IntegerSet) node1.firstpos());
+					setFirstPos(node1.firstpos());
 			} else {
 				// this would be used if we accepted Nary Trees (as opposed to binary)
 				ModelNode node = (ModelNode) getFirstChild();
@@ -912,15 +972,16 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		protected void calculateLastPos(ModelNode node1, ModelNode node2) {
 			if (binary) {
 				if (node2.nullable())
-					setLastPos(((IntegerSet) node2.lastpos().clone()).reunion((IntegerSet) node1.lastpos()));
+					setLastPos(((IntegerSet) node2.lastpos().clone()).reunion(node1.lastpos()));
 				else
 					// do not clone, since it is the same
 					// TODO: check this assumption is correct at runtime, what if something else
 					// changes the original set?
-					setLastPos((IntegerSet) node2.lastpos());
+					setLastPos(node2.lastpos());
 			} else {
 				ModelNode node = (ModelNode) getLastChild();
 				setLastPos((IntegerSet) node.lastpos().clone());
@@ -934,6 +995,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		protected void calculateNullable(ModelNode node1, ModelNode node2) {
 			if (binary)
 				setNullable(node1.nullable() && node2.nullable());
@@ -946,6 +1008,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			}
 		}
 
+		@Override
 		void calculateFollowpos() {
 			if (binary) {
 				ModelNode node1 = (ModelNode) getFirstChild();
@@ -988,15 +1051,17 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 
 		// this makes AND nodes binary (groups AND so they don't have more than 2
 		// children)
+		@Override
 		OperatorNode makeBinary(OperatorNode node) {
 			if (node.getChildrenCount() == 2) {
 				// get last child, which will be moved down in the tree
 				ModelNode node1 = (ModelNode) node.getLastChild();
-				node = (OperatorNode) node1.insertParent((ModelNode) node.clone());
+				node = (OperatorNode) node1.insertParent(node.clone());
 			}
 			return node;
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -1015,11 +1080,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(name);
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("OR").getBytes());
 			super.dump(os);
 		}
 
+		@Override
 		public String toString() {
 			String string = new String();
 			string += "(";
@@ -1037,10 +1104,12 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		}
 
 		// public String toString() { return "OR"; }
+		@Override
 		public ModelNode clone() {
 			return new OperatorOrNode("Cloned" + super.getName());
 		}
 
+		@Override
 		protected void calculateFirstPos(ModelNode node1, ModelNode node2) {
 			ModelNode node = (ModelNode) getFirstChild();
 			setFirstPos((IntegerSet) node.firstpos().clone());
@@ -1048,6 +1117,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 				firstpos().reunion(node.firstpos());
 		}
 
+		@Override
 		protected void calculateLastPos(ModelNode node1, ModelNode node2) {
 			ModelNode node = (ModelNode) getFirstChild();
 			setLastPos((IntegerSet) node.lastpos().clone());
@@ -1055,6 +1125,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 				lastpos().reunion(node.lastpos());
 		}
 
+		@Override
 		protected void calculateNullable(ModelNode node1, ModelNode node2) {
 			boolean b = false;
 
@@ -1064,6 +1135,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			setNullable(b);
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
@@ -1088,19 +1160,24 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			super(node);
 		}
 
+		@Override
 		protected void calculateFirstPos(ModelNode node1, ModelNode node2) {
 		}
 
+		@Override
 		protected void calculateLastPos(ModelNode node1, ModelNode node2) {
 		}
 
+		@Override
 		protected void calculateNullable(ModelNode node1, ModelNode node2) {
 		}
 
+		@Override
 		protected boolean isAmbiguous(ModelNode node1, ModelNode node2) {
 			return false;
 		}
 
+		@Override
 		public boolean check() {
 			// for all content model, we only support optional elements at most. No nested
 			// content models.
@@ -1130,11 +1207,13 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return true;
 		}
 
+		@Override
 		public void dump(OutputStream os) throws IOException {
 			os.write(("ALL").getBytes());
 			super.dump(os);
 		}
 
+		@Override
 		public String toString() {
 			String string = new String();
 			string += "(";
@@ -1151,6 +1230,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 			return string;
 		}
 
+		@Override
 		public Node<ModelNode> clone() {
 			return new OperatorAllNode(this);
 		}
@@ -1176,6 +1256,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 		return name;
 	}
 
+	@Override
 	public String toString() {
 		ModelNode root = (ModelNode) getRoot();
 		if (root != null)
@@ -1600,7 +1681,7 @@ public class SyntaxTree extends NaryTree<ModelNode> {
 
 		if (parent != null)
 			// check that unary operators don't have already children
-			Validate.isTrue(((ModelNode) parent).canHaveMoreChildren(), "Unary operators can only have one child");
+			Validate.isTrue(parent.canHaveMoreChildren(), "Unary operators can only have one child");
 
 		OperatorNode op = (OperatorNode) parent;
 

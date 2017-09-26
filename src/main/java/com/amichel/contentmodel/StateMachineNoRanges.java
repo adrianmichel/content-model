@@ -51,6 +51,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 		}
 
 		// calculates the next state, based on the input symbol and the current state
+		@Override
 		public boolean doTransition(String symbol) {
 			Validate.notNull(symbol);
 
@@ -63,6 +64,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 			}
 		}
 
+		@Override
 		public boolean isValidTransition(String symbol) {
 			Validate.notNull(symbol);
 
@@ -71,10 +73,12 @@ class StateMachineNoRanges implements AbstractStateMachine {
 
 		// determines if the current state is also a final state
 		// which would allow the user to terminate the validation
+		@Override
 		public boolean canTerminate() {
 			return sm.isFinal(crtState);
 		}
 
+		@Override
 		public Iterable<String> getValidTransitions() {
 			return sm.getValidSymbolsFromState(crtState);
 		}
@@ -153,7 +157,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 			Validate.notNull(symbol);
 			Validate.isTrue(from >= 0 && to > 0);
 
-			Row row = (Row) get(symbol);
+			Row row = get(symbol);
 			// if there is no row corresponding to "symbol"
 			// create a new row
 			if (row == null) {
@@ -169,7 +173,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 			Validate.notNull(symbol);
 			Validate.isTrue(from >= 0);
 
-			Row row = (Row) get(symbol);
+			Row row = get(symbol);
 
 			if (row == null)
 				// throw something
@@ -202,6 +206,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 	}
 
 	// makes a new state object, to be used on this state machine
+	@Override
 	public AbstractState getInitialState() {
 		// ModelWriter.println( "************* Getting the initial state
 		// ***************" );
@@ -230,6 +235,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 		this.finalStates = finalStates;
 	}
 
+	@Override
 	public void setFinalStates(Object o) {
 		setFinalStates((IntegerSet) o);
 	}
@@ -258,6 +264,7 @@ class StateMachineNoRanges implements AbstractStateMachine {
 		return stateTable.getValidSymbolsFromState(from);
 	}
 
+	@Override
 	public void dump() {
 		try {
 			ModelWriter.println("--------------- State Machine ---------------");

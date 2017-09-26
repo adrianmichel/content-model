@@ -60,6 +60,7 @@ public class IntegerVector extends Vector<Integer> {
 	 *
 	 * @return The string representation of the vector
 	 */
+	@Override
 	public String toString() {
 		return "{" + StringUtils.join(this, ",") + "}";
 	}

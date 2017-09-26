@@ -97,15 +97,17 @@ class StateMachineRanges implements AbstractStateMachine {
 		}
 
 		// calculates the next state, based on the input symbol and the current state
+		@Override
 		public boolean doTransition(String symbol) {
 			Validate.notNull(symbol);
 
 			return sm.transition(symbol, this);
 		}
 
+		@Override
 		public boolean isValidTransition(String symbol) {
 			int oldCrtState = crtState;
-			RangeVector oldRv = (RangeVector) rv.clone();
+			RangeVector oldRv = rv.clone();
 			boolean b = doTransition(symbol);
 			crtState = oldCrtState;
 			rv = oldRv;
@@ -114,6 +116,7 @@ class StateMachineRanges implements AbstractStateMachine {
 
 		// determines if the current state is also a final state
 		// which would allow the user to terminate the validation
+		@Override
 		public boolean canTerminate() {
 			return sm.canTerminate(this);
 		}
@@ -148,6 +151,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			return rv.increment(n);
 		}
 
+		@Override
 		public Iterable<String> getValidTransitions() {
 			return sm.getValidSymbolsFromState(this);
 		}
@@ -216,7 +220,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			boolean isValidTransition(State state) {
 				Validate.notNull(state);
 
-				return ((Transition) row[state.getCrtState()]).isValid();
+				return row[state.getCrtState()].isValid();
 			}
 
 			public void dump() {
@@ -240,7 +244,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			Validate.isTrue(from >= 0);
 			Validate.notNull(transition);
 
-			Row row = (Row) get(symbol);
+			Row row = get(symbol);
 			// if there is no row corresponding to "symbol"
 			// create a new row
 			if (row == null) {
@@ -256,7 +260,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			Validate.notNull(symbol);
 			Validate.notNull(state);
 
-			Row row = (Row) get(symbol);
+			Row row = get(symbol);
 			if (row != null)
 				return row.transition(state);
 			else
@@ -291,6 +295,7 @@ class StateMachineRanges implements AbstractStateMachine {
 	}
 
 	// makes a new state object, to be used on this state machine
+	@Override
 	public AbstractState getInitialState() {
 		// ModelWriter.println( "************* Getting the initial state
 		// ***************" );
@@ -324,6 +329,7 @@ class StateMachineRanges implements AbstractStateMachine {
 		this.finalStates = finalStates;
 	}
 
+	@Override
 	public void setFinalStates(Object o) {
 		setFinalStates((FinalStates) o);
 	}
@@ -355,6 +361,7 @@ class StateMachineRanges implements AbstractStateMachine {
 
 	}
 
+	@Override
 	public void dump() {
 		ModelWriter.println("------------------- State Machine -----------------");
 		ModelWriter.println("Name: " + name);
@@ -385,6 +392,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			nextState = _nextState;
 		}
 
+		@Override
 		public boolean toNextState(State state) {
 			Validate.notNull(state);
 
@@ -394,10 +402,12 @@ class StateMachineRanges implements AbstractStateMachine {
 
 		// this indicates that we cannot replace this transition
 		// in the transition table or it is a nondeterministic FA
+		@Override
 		public boolean canAddTransition() {
 			return false;
 		}
 
+		@Override
 		public void dump(int from) {
 			ModelWriter.print("\t");
 			ModelWriter.print(from);
@@ -406,6 +416,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			ModelWriter.println();
 		}
 
+		@Override
 		public boolean isValid() {
 			return true;
 		}
@@ -418,19 +429,23 @@ class StateMachineRanges implements AbstractStateMachine {
 			return it;
 		}
 
+		@Override
 		public boolean toNextState(State state) {
 			return false;
 		}
 
 		// initially, the state machine has only invalid transitions
 		// and they can be replaced in the state machine by other valid transitions
+		@Override
 		public boolean canAddTransition() {
 			return true;
 		}
 
+		@Override
 		public void dump(int from) { /* ModelWriter.print( "Invalid transition" ); */
 		}
 
+		@Override
 		public boolean isValid() {
 			return false;
 		}
@@ -449,6 +464,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			this.v = v;
 		}
 
+		@Override
 		public boolean toNextState(State state) {
 			Validate.notNull(state);
 
@@ -458,6 +474,7 @@ class StateMachineRanges implements AbstractStateMachine {
 				return false;
 		}
 
+		@Override
 		public void dump(int from) {
 			try {
 				ModelWriter.print("\t");
@@ -490,6 +507,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			this.v = v;
 		}
 
+		@Override
 		public boolean toNextState(State state) {
 			if (super.toNextState(state))
 				return state.check(v);
@@ -497,6 +515,7 @@ class StateMachineRanges implements AbstractStateMachine {
 				return false;
 		}
 
+		@Override
 		public void dump(int from) {
 			try {
 				ModelWriter.print("\t");
@@ -532,6 +551,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			inc = _inc;
 		}
 
+		@Override
 		public boolean toNextState(State state) {
 			if (state.increment(inc))
 				return super.toNextState(state);
@@ -539,6 +559,7 @@ class StateMachineRanges implements AbstractStateMachine {
 				return false;
 		}
 
+		@Override
 		public void dump(int from) {
 			try {
 				ModelWriter.print("\t");
@@ -578,6 +599,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			this.v = v1;
 		}
 
+		@Override
 		public boolean toNextState(State state) {
 			if (super.toNextState(state))
 				return state.initStart(v);
@@ -585,6 +607,7 @@ class StateMachineRanges implements AbstractStateMachine {
 				return true;
 		}
 
+		@Override
 		public void dump(int from) {
 			try {
 				ModelWriter.print("\t");
@@ -622,12 +645,13 @@ class StateMachineRanges implements AbstractStateMachine {
 			}
 		}
 
+		@Override
 		public RangeVector clone() {
 			return new RangeVector(this);
 		}
 
 		boolean increment(int n) {
-			Range range = (Range) elementAt(n);
+			Range range = elementAt(n);
 			return range.increment();
 		}
 
@@ -697,7 +721,7 @@ class StateMachineRanges implements AbstractStateMachine {
 		private int count;
 
 		private Range(Range range) {
-			limits = (Limits) range.getLimits().clone();
+			limits = range.getLimits().clone();
 			count = range.getCount();
 		}
 
@@ -744,6 +768,7 @@ class StateMachineRanges implements AbstractStateMachine {
 			ModelWriter.print(count);
 		}
 
+		@Override
 		public Range clone() {
 			return new Range(this);
 		}

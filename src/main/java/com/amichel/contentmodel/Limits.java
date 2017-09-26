@@ -27,6 +27,7 @@ class Limits {
 		limits = ip;
 	}
 
+	@Override
 	public Limits clone() {
 		return new Limits(Pair.of(limits.getLeft(), limits.getRight()));
 	}
@@ -47,6 +48,7 @@ class Limits {
 		return max() == INFINITY || count <= max();
 	}
 
+	@Override
 	public String toString() {
 		String min = (new Integer(min())).toString();
 		String max = max() == -1 ? "*" : (new Integer(max())).toString();

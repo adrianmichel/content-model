@@ -20,6 +20,7 @@ public class BadLimitsException extends Exception {
 		ip = Pair.of(min, max);
 	}
 
+	@Override
 	public String toString() {
 		return "[" + (new Integer(ip.getLeft())).toString() + "," + (new Integer(ip.getRight())).toString() + "]";
 	}
